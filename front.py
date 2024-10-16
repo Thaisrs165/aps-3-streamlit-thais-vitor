@@ -87,6 +87,7 @@ st.sidebar.header("🔍 Filtros de Pesquisa")
 marca = st.sidebar.text_input("📍 Digite o marca") 
 modelo = st.sidebar.text_input("📍 Digite o modelo") 
 cidade = st.sidebar.text_input("📍 Digite o cidade") 
+status = st.sidebar.selectbox("📍 Digite o status", ["", "livre", "em uso"])
 
 # preco_min, preco_max = st.sidebar.slider(
 #     "💰 Faixa de Preço (R$)",
@@ -98,32 +99,57 @@ cidade = st.sidebar.text_input("📍 Digite o cidade")
 
 
 # Função para buscar imóveis
+# def buscar_bikes():
+#     # Parâmetros para a requisição GET
+#     params = {
+#         'modelo': modelo,  # Inclui o tipo de imóvel selecionado pelo usuário.
+#         'marca': marca,      # Inclui o valor mínimo da faixa de preço selecionada.
+#         'cidade': cidade      # Inclui o valor máximo da faixa de preço selecionada.
+#         # 'cep': cep if cep else None  # Inclui o CEP se for fornecido, caso contrário, deixa como None.
+#     }
+
+#     # Fazendo a requisição GET para o backend
+#     data = fazer_requisicao("bikes", method="GET", params=params)
+#     # Chama a função 'fazer_requisicao' para enviar uma requisição GET ao endpoint '/imoveis' do backend,
+#     # com os parâmetros (filtros) fornecidos pelo usuário.
+
+#     # Se houver dados na resposta, exibir os imóveis
+#     if data and data['resultados']['quantidade'] > 0:
+#         # Se a resposta contiver resultados (quantidade de imóveis for maior que 0), exibe os imóveis encontrados.
+#         df_bikes = pd.DataFrame(data['resultados']['bikes'])
+#         # Converte os imóveis em um DataFrame do Pandas para exibição em tabela.
+#         st.write("### 🏠 Resultados da Pesquisa")
+#         st.dataframe(df_bikes) 
+#         # Exibe os resultados da pesquisa em uma tabela interativa no frontend do Streamlit.
+#     elif data:
+#         st.write("❌ Nenhuma bike encontrada para os filtros selecionados.")
+#         # Se não houver resultados (mas houver dados válidos na resposta), exibe uma mensagem dizendo que 
+#         # nenhum imóvel foi encontrado.
+
+
 def buscar_bikes():
-    # Parâmetros para a requisição GET
-    params = {
-        'Modelo': Modelo,  # Inclui o tipo de imóvel selecionado pelo usuário.
-        'Marca': Marca,      # Inclui o valor mínimo da faixa de preço selecionada.
-        'Cidade': Cidade      # Inclui o valor máximo da faixa de preço selecionada.
-        # 'cep': cep if cep else None  # Inclui o CEP se for fornecido, caso contrário, deixa como None.
-    }
+    params = {}
+    if marca:
+        params['marca'] = marca.strip()
+    if modelo:
+        params['modelo'] = modelo.strip()
+    if cidade:
+        params['cidade'] = cidade.strip()
+    if status:
+        params['status'] = status.strip()
 
-    # Fazendo a requisição GET para o backend
-    data = fazer_requisicao("imoveis", method="GET", params=params)
-    # Chama a função 'fazer_requisicao' para enviar uma requisição GET ao endpoint '/imoveis' do backend,
-    # com os parâmetros (filtros) fornecidos pelo usuário.
+    data = fazer_requisicao("bikes", method="GET", params=params)
 
-    # Se houver dados na resposta, exibir os imóveis
-    if data and data['resultados']['quantidade'] > 0:
-        # Se a resposta contiver resultados (quantidade de imóveis for maior que 0), exibe os imóveis encontrados.
-        df_bikes = pd.DataFrame(data['resultados']['imoveis'])
-        # Converte os imóveis em um DataFrame do Pandas para exibição em tabela.
-        st.write("### 🏠 Resultados da Pesquisa")
+    if data and len(data['lista']) > 0:
+        st.write("### 🚲 Bikes disponíveis")
+        df_bikes = pd.DataFrame(data['lista'])
         st.dataframe(df_bikes) 
-        # Exibe os resultados da pesquisa em uma tabela interativa no frontend do Streamlit.
     elif data:
         st.write("❌ Nenhuma bike encontrada para os filtros selecionados.")
-        # Se não houver resultados (mas houver dados válidos na resposta), exibe uma mensagem dizendo que 
-        # nenhum imóvel foi encontrado.
+    else:
+        st.error("⚠️ Erro ao buscar bikes.")
+
+
 
 # Botão para buscar imóveis
 if st.sidebar.button("🔍 Buscar bikes"):
