@@ -24,8 +24,15 @@ def load_data():
     users = requisicao("usuarios")
     bikes = requisicao("bikes", method="GET", data={"status": "livre"})
 
-    df_usuarios = pd.DataFrame(users['lista']) if users else pd.DataFrame()
-    df_bikes = pd.DataFrame(bikes['lista']) if bikes else pd.DataFrame()
+    if users is not None:
+        df_usuarios = pd.DataFrame(users['lista'])
+    else:
+        df_usuarios = pd.DataFrame()
+
+    if bikes is not None:
+        df_bikes = pd.DataFrame(bikes['lista'])
+    else:
+        df_bikes = pd.DataFrame()
 
     return df_usuarios, df_bikes
 
