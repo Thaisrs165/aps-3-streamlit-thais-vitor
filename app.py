@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 
+
 BASE_URL = "http://127.0.0.1:5000"
 
 def requisicao(endpoint, method="GET", data=None):
@@ -70,3 +71,4 @@ if not df_usuarios.empty and not df_bikes.empty:
             st.success("🚲 Empréstimo registrado com sucesso!")
 else:
     st.error("⚠️ Não há dados suficientes para realizar um empréstimo.")
+
