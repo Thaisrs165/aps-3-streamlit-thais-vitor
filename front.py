@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import requests
-
-
 BASE_URL = "http://127.0.0.1:5000"
 
 def requisicao(endpoint, method="GET", data=None):
@@ -39,18 +37,15 @@ def load_data():
 
 st.title("🚲 Sistema de Empréstimos de Bikes")
 
-
 df_usuarios, df_bikes = load_data()
 
 if not df_usuarios.empty and not df_bikes.empty:
-    
     st.write("### 👥 Usuários Disponíveis")
     st.dataframe(df_usuarios[['nome', 'cpf']])
 
     st.write("### 🚲 Bikes Disponíveis")
     st.dataframe(df_bikes[['marca', 'modelo', 'cidade']])
 
-    
     usuarios_opc = list(df_usuarios['nome'])
     usuario_select = st.selectbox("Selecione o Usuário", usuarios_opc)
     id_usuario = df_usuarios.loc[df_usuarios['nome'] == usuario_select, '_id'].values[0]
@@ -59,7 +54,6 @@ if not df_usuarios.empty and not df_bikes.empty:
     bike_select = st.selectbox("Selecione a Bike", bikes_opc)
     bike_index = bikes_opc.index(bike_select)
     id_bike = df_bikes.iloc[bike_index]['_id']
-
 
     if st.button("📥 Confirmar Empréstimo"):
         emprestimo = requisicao(
