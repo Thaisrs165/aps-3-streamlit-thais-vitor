@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
-BASE_URL = "http://127.0.0.1:5000"
+BASE_URL = "https://aps-3-flask-rest-mongo-vitorpereira2202.onrender.com"
 
 def requisicao(endpoint, method="GET", data=None):
     url = f"{BASE_URL}/{endpoint}"
